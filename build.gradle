@@ -23,7 +23,6 @@ configurations {
 
 repositories {
 	mavenCentral()
-	mavenLocal()//common spring library
 }
 
 dependencies {
@@ -36,7 +35,6 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-data-redis-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-//	implementation 'com.example:UberProject-EntityService:0.0.4-SNAPSHOT' this is not needed for this service as Entity Service has exact location which is store in db but we are using redis so no need or this
 	implementation 'redis.clients:jedis:5.1.2'
 }
 
