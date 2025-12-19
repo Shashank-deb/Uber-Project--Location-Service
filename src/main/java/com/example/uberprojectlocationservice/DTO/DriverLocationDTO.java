@@ -1,4 +1,4 @@
-package com.example.uberprojectlocationservice.configurations.DTO;
+package com.example.uberprojectlocationservice.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

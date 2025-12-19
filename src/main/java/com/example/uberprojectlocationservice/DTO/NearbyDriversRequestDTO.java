@@ -1,4 +1,4 @@
-package com.example.uberprojectlocationservice.configurations.DTO;
+package com.example.uberprojectlocationservice.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,8 +11,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SaveDriverLocationRequestDTO {
-    String driverId;
+public class NearbyDriversRequestDTO {
     Double latitude;
     Double longitude;
 }

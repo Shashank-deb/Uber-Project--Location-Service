@@ -1,7 +1,6 @@
 package com.example.uberprojectlocationservice.service;
 
-
-import com.example.uberprojectlocationservice.configurations.DTO.DriverLocationDTO;
+import com.example.uberprojectlocationservice.DTO.DriverLocationDTO;
 import org.springframework.data.geo.*;
 import org.springframework.data.redis.connection.RedisGeoCommands;
 import org.springframework.data.redis.core.GeoOperations;
@@ -14,14 +13,16 @@ import java.util.List;
 @Service
 public class RedisLocationServiceImpl implements LocationService {
 
-    private StringRedisTemplate stringRedisTemplate;
     private static final String DRIVER_GEO_OPS_KEY = "drivers";
-    private static final Double SEARCH_RADIUS = 5.4;
+    private static final Double SEARCH_RADIUS = 5.0;
+
+    private final StringRedisTemplate stringRedisTemplate;
+
+
 
     public RedisLocationServiceImpl(StringRedisTemplate stringRedisTemplate) {
         this.stringRedisTemplate = stringRedisTemplate;
     }
-
 
     @Override
     public Boolean saveDriverLocation(String driverId, Double latitude, Double longitude) {
@@ -30,25 +31,26 @@ public class RedisLocationServiceImpl implements LocationService {
                 DRIVER_GEO_OPS_KEY,
                 new RedisGeoCommands.GeoLocation<>(
                         driverId,
-                        new Point(latitude,
+                        new Point(
+                                latitude,
                                 longitude)));
         return true;
     }
 
     @Override
-    public List<DriverLocationDTO> getNearbyDrivers(Double latitude, Double longitude) {
+    public List<DriverLocationDTO> getNearByDrivers(Double latitude, Double longitude) {
         GeoOperations<String, String> geoOps = stringRedisTemplate.opsForGeo();
         Distance radius = new Distance(SEARCH_RADIUS, Metrics.KILOMETERS);
         Circle within = new Circle(new Point(latitude, longitude), radius);
-        GeoResults<RedisGeoCommands.GeoLocation<String>> results = geoOps.radius(DRIVER_GEO_OPS_KEY, within);
 
+        GeoResults<RedisGeoCommands.GeoLocation<String>> results = geoOps.radius(DRIVER_GEO_OPS_KEY, within);
         List<DriverLocationDTO> drivers = new ArrayList<>();
-        for (GeoResult<RedisGeoCommands.GeoLocation<String>> result : results) {
-            System.out.println(result.getContent().getName());
+        for(GeoResult<RedisGeoCommands.GeoLocation<String>> result : results) {
+            Point point = geoOps.position(DRIVER_GEO_OPS_KEY, result.getContent().getName()).get(0);
             DriverLocationDTO driverLocation = DriverLocationDTO.builder()
                     .driverId(result.getContent().getName())
-                    .latitude(result.getContent().getPoint().getX())
-                    .longitude(result.getContent().getPoint().getY())
+                    .latitude(point.getX())
+                    .longitude(point.getY())
                     .build();
             drivers.add(driverLocation);
         }
