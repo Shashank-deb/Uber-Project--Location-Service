@@ -19,7 +19,6 @@ public class RedisLocationServiceImpl implements LocationService {
     private final StringRedisTemplate stringRedisTemplate;
 
 
-
     public RedisLocationServiceImpl(StringRedisTemplate stringRedisTemplate) {
         this.stringRedisTemplate = stringRedisTemplate;
     }
@@ -45,7 +44,7 @@ public class RedisLocationServiceImpl implements LocationService {
 
         GeoResults<RedisGeoCommands.GeoLocation<String>> results = geoOps.radius(DRIVER_GEO_OPS_KEY, within);
         List<DriverLocationDTO> drivers = new ArrayList<>();
-        for(GeoResult<RedisGeoCommands.GeoLocation<String>> result : results) {
+        for (GeoResult<RedisGeoCommands.GeoLocation<String>> result : results) {
             Point point = geoOps.position(DRIVER_GEO_OPS_KEY, result.getContent().getName()).get(0);
             DriverLocationDTO driverLocation = DriverLocationDTO.builder()
                     .driverId(result.getContent().getName())
